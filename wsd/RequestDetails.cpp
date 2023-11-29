@@ -44,11 +44,13 @@ RequestDetails::RequestDetails(Poco::Net::HTTPRequest &request, const std::strin
 {
     // Check and remove the ServiceRoot from the request.getURI()
     if (!Util::startsWith(request.getURI(), serviceRoot))
-        throw BadRequestException("The request does not start with prefix: " + serviceRoot);
+        LOG_INF("The request: " << request.getURI());
+        LOG_INF("Does not start with prefix: " << serviceRoot);
 
     // re-writes ServiceRoot out of request
     _uriString = request.getURI().substr(serviceRoot.length());
     dehexify();
+    LOG_INF("Final URI string: " << _uriString);
     request.setURI(_uriString);
     const std::string &method = request.getMethod();
     _isGet = method == "GET";
